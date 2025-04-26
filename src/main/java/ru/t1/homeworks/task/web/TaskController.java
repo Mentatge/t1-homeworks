@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.t1.homeworks.task.entity.Task;
 import ru.t1.homeworks.task.service.TaskService;
 import ru.t1.homeworks.task.service.dto.TaskRequestDto;
 import ru.t1.homeworks.task.service.dto.TaskDto;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/tasks")
@@ -29,7 +29,7 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getTask(@PathVariable Long id) {
+    public ResponseEntity<TaskDto> getTask(@PathVariable Long id) {
         return ResponseEntity.ok(taskService.getById(id));
     }
 
@@ -41,7 +41,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @Valid @RequestBody TaskRequestDto dto) {
+    public ResponseEntity<TaskDto> updateTask(@PathVariable Long id, @Valid @RequestBody TaskRequestDto dto) {
         return ResponseEntity.ok(taskService.update(id, dto));
     }
 
@@ -50,8 +50,10 @@ public class TaskController {
         taskService.delete(id);
         return ResponseEntity.noContent().build();
     }
-//
-//    public ResponseEntity<> getTasks() {
-//    }
+
+    @GetMapping
+    public ResponseEntity<List<TaskDto>> getTasks() {
+        return ResponseEntity.ok((taskService.getTasks()));
+    }
 
 }
