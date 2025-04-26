@@ -1,11 +1,13 @@
 package ru.t1.homeworks.task.service;
 
-import ru.t1.homeworks.task.service.dto.TaskCreateDto;
-import ru.t1.homeworks.task.service.dto.TaskDto;
+import ru.t1.homeworks.task.entity.Task;
+import ru.t1.homeworks.task.service.dto.TaskRequestDto;
 
 public interface TaskService {
 
-    TaskDto getById(Long id);
+    Task getById(Long id);
 
-    Long create(TaskCreateDto dto);
+    Long create(TaskRequestDto dto);
+
+    Task update(Long id, TaskRequestDto dto);
 }
