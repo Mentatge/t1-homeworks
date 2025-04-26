@@ -10,4 +10,6 @@ public interface TaskService {
     Long create(TaskRequestDto dto);
 
     Task update(Long id, TaskRequestDto dto);
+
+    void delete(Long id);
 }

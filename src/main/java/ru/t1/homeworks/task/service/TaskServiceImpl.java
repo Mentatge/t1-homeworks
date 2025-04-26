@@ -38,4 +38,10 @@ public class TaskServiceImpl implements TaskService {
         task.setUserId(dto.getUserId());
         return taskRepository.save(task);
     }
+
+    @Override
+    public void delete(Long id) {
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task not found"));
+        taskRepository.delete(task);
+    }
 }
