@@ -45,7 +45,6 @@ public class LoggingAspect {
             log.info("Ending method {}", joinPoint.getSignature().getName());
             return result;
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
             log.error("Around catched exception {}", throwable.getClass());
             throw throwable;
         } finally {
