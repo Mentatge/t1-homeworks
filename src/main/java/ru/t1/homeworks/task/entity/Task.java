@@ -17,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+
 import java.time.LocalDate;
 
 @Getter
@@ -51,5 +52,4 @@ public class Task {
     @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDate updatedAt;
-
 }

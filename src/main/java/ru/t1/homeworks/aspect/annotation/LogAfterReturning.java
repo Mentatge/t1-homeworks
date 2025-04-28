@@ -10,5 +10,3 @@ import java.lang.annotation.Target;
 public @interface LogAfterReturning {
 
 }
-
-

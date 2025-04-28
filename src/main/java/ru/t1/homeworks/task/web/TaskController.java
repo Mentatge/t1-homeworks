@@ -55,5 +55,4 @@ public class TaskController {
     public ResponseEntity<List<TaskDto>> getTasks() {
         return ResponseEntity.ok((taskService.getTasks()));
     }
-
 }
