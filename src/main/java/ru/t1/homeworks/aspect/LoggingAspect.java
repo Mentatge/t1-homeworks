@@ -11,6 +11,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+
 @Slf4j
 @Aspect
 @Component
@@ -18,39 +20,31 @@ public class LoggingAspect {
 
     @Before("@annotation(ru.t1.homeworks.aspect.annotation.LogBefore)")
     public void logBefore(JoinPoint joinPoint) {
-        log.info("Starting method {}", joinPoint.getSignature().getName());
-        log.info("Arguments: {}", joinPoint.getArgs());
+        log.info("Starting method {}. Arguments: {}", joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
     }
 
     @AfterReturning(value = "@annotation(ru.t1.homeworks.aspect.annotation.LogAfterReturning)", returning = "result")
     public void logAfterReturning(JoinPoint joinPoint, Object result) {
-        log.info("Finish method {}", joinPoint.getSignature().getName());
-        log.info("Result: {}", result);
+        log.info("Finish method {}. Result: {}", joinPoint.getSignature().getName(), result);
     }
 
     @AfterThrowing(value = "@annotation(ru.t1.homeworks.aspect.annotation.LogAfterThrowing)", throwing = "ex")
     public void logAfterThrowing(JoinPoint joinPoint, Throwable ex) {
-        log.warn("Method {} thrown exception", joinPoint.getSignature().getName());
-        log.error("Arguments: {}", joinPoint.getArgs());
-        log.error("Exception: {}", ex.getClass());
+        log.warn("Exception in {} with args={} → {}",
+                joinPoint.getSignature().toShortString(),
+                Arrays.toString(joinPoint.getArgs()),
+                ex.toString(), ex);
     }
 
     @Around("@annotation(ru.t1.homeworks.aspect.annotation.LogAround)")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        log.info("Around start");
+        log.info("Around start in method {}.", joinPoint.getSignature().getName());
         long startTime = System.currentTimeMillis();
         try {
-            log.info("Starting method {}", joinPoint.getSignature().getName());
-            Object result = joinPoint.proceed();
-            log.info("Ending method {}", joinPoint.getSignature().getName());
-            return result;
-        } catch (Throwable throwable) {
-            log.error("Around catched exception {}", throwable.getClass());
-            throw throwable;
+            return joinPoint.proceed();
         } finally {
-            log.info("Around finish");
             long endTime = System.currentTimeMillis();
-            log.info("Time taken: {} ms", endTime - startTime);
+            log.info("Around finish.  Time taken: {} ms", endTime - startTime);
         }
     }
 }

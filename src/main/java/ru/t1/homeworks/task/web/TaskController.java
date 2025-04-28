@@ -3,7 +3,7 @@ package ru.t1.homeworks.task.web;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.t1.homeworks.task.service.TaskService;
 import ru.t1.homeworks.task.service.dto.TaskRequestDto;
 import ru.t1.homeworks.task.service.dto.TaskDto;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -29,30 +29,31 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskDto> getTask(@PathVariable Long id) {
-        return ResponseEntity.ok(taskService.getById(id));
+    @ResponseStatus(HttpStatus.OK)
+    public TaskDto getTask(@PathVariable Long id) {
+        return taskService.getById(id);
     }
 
     @PostMapping
-    public ResponseEntity<Long> createTask(@Valid @RequestBody TaskRequestDto dto) {
-        Long createdId = taskService.create(dto);
-        URI location = URI.create("/api/v1/tasks/" + createdId);
-        return ResponseEntity.created(location).body(createdId);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Long createTask(@Valid @RequestBody TaskRequestDto dto) {
+        return taskService.create(dto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TaskDto> updateTask(@PathVariable Long id, @Valid @RequestBody TaskRequestDto dto) {
-        return ResponseEntity.ok(taskService.update(id, dto));
+    @ResponseStatus(HttpStatus.OK)
+    public TaskDto updateTask(@PathVariable Long id, @Valid @RequestBody TaskRequestDto dto) {
+        return taskService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+    public void deleteTask(@PathVariable Long id) {
         taskService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<TaskDto>> getTasks() {
-        return ResponseEntity.ok((taskService.getTasks()));
+    @ResponseStatus(HttpStatus.OK)
+    public List<TaskDto> getTasks() {
+        return taskService.getTasks();
     }
 }
