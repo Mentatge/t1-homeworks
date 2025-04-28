@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/${dbName}
+    username: t1_homework
+    password: t1_homework
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    open-in-view: false
+
+  liquibase:
+    enabled: true
+    change-log: db/root-changelog.xml
+
+dbName: t1_homework_db
+
+
