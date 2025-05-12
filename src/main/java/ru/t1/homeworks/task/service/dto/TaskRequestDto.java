@@ -16,4 +16,7 @@ public class TaskRequestDto {
     private String description;
     @NotNull
     private Long userId;
+    @NotNull
+    @Size(max = 20)
+    private String status;
 }

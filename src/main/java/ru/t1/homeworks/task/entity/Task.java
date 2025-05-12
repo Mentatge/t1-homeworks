@@ -45,6 +45,11 @@ public class Task {
     @Column(name = "user_id")
     private Long userId;
 
+    @NotBlank
+    @Size(max = 20)
+    @Column(name = "status", nullable = false, length = 20)
+    private String status;
+
     @CreatedDate
     @Column(name = "created_at")
     private LocalDate createdAt;
