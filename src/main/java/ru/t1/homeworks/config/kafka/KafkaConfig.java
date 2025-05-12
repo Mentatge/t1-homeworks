@@ -19,6 +19,7 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.listener.ContainerProperties;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,14 +28,20 @@ import java.util.Map;
 @Configuration
 public class KafkaConfig {
 
-    public static final String TOPIC = "task-status";
+    @Value("${kafka.topics.task-status}")
+    private String topic;
+
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
+    @Value("${spring.kafka.consumer.group-id}")
+    private String consumerGroupId;
+
     @Bean
     public NewTopic taskStatusTopic() {
-        return TopicBuilder.name(TOPIC)
+
+        return TopicBuilder.name(topic)
                 .partitions(1)
                 .replicas(1)
                 .build();
@@ -63,7 +70,7 @@ public class KafkaConfig {
     public Map<String, Object> consumerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "task-notifier-group");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroupId);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         return props;
@@ -79,6 +86,7 @@ public class KafkaConfig {
         ConcurrentKafkaListenerContainerFactory<Long, String> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         return factory;
     }
 }

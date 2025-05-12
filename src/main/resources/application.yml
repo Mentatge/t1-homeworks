@@ -1,3 +1,9 @@
+kafka:
+  topics:
+    task-status: task-status
+  listener:
+    header-key: kafka_receivedKey
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
