@@ -3,6 +3,8 @@ package ru.t1.homeworks.task.service;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.t1.homeworks.aspect.annotation.LogAfterReturning;
 import ru.t1.homeworks.aspect.annotation.LogAfterThrowing;
@@ -10,6 +12,7 @@ import ru.t1.homeworks.aspect.annotation.LogAround;
 import ru.t1.homeworks.aspect.annotation.LogBefore;
 import ru.t1.homeworks.task.dao.TaskRepository;
 import ru.t1.homeworks.task.entity.Task;
+import ru.t1.homeworks.task.entity.TaskStatus;
 import ru.t1.homeworks.task.exception.TaskNotFoundException;
 import ru.t1.homeworks.task.service.dto.TaskRequestDto;
 import ru.t1.homeworks.task.service.dto.TaskDto;
@@ -22,6 +25,11 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final ModelMapper modelMapper;
+    private final KafkaTemplate<Long, String> kafkaTemplate;
+
+    @Value("${kafka.topics.task-status}")
+    private String taskStatusTopic;
+
 
     @Override
     @LogBefore
@@ -42,11 +50,21 @@ public class TaskServiceImpl implements TaskService {
     @LogAfterThrowing
     @LogAround
     public TaskDto update(Long id, TaskRequestDto dto) {
+        TaskStatus newStatus = dto.getStatus();
         Task task = findById(id);
         task.setDescription(dto.getDescription());
         task.setTitle(dto.getTitle());
         task.setUserId(dto.getUserId());
-        taskRepository.save(task);
+        String oldStatus = task.getStatus().name();
+        task.setStatus(newStatus);
+        Task saved = taskRepository.save(task);
+        if (!oldStatus.equals(newStatus.name())) {
+            kafkaTemplate.send(
+                    taskStatusTopic,
+                    saved.getId(),
+                    newStatus.name()
+            );
+        }
         return modelMapper.map(task, TaskDto.class);
     }
 

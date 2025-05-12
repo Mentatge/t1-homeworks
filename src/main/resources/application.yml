@@ -1,3 +1,9 @@
+kafka:
+  topics:
+    task-status: task-status
+  listener:
+    header-key: kafka_receivedKey
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -15,6 +21,34 @@ spring:
     enabled: true
     change-log: db/root-changelog.xml
 
-dbName: t1_homework_db
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: task-notifier-group
+      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
+
+  mail:
+    host: smtp.yandex.ru
+    port: 587
+    username: mentatge@yandex.ru
+    password: ncdhomktywwyxijd
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            trust: smtp.yandex.ru
+
+
+notification:
+  recipient: mentatge@yandex.ru
+
+dbName: t1_homework_db
 

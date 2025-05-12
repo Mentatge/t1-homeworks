@@ -1,6 +1,8 @@
 package ru.t1.homeworks.task.entity;
 
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -44,6 +46,9 @@ public class Task {
     @NotNull
     @Column(name = "user_id")
     private Long userId;
+
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
 
     @CreatedDate
     @Column(name = "created_at")

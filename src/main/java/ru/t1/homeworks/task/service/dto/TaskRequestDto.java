@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import ru.t1.homeworks.task.entity.TaskStatus;
 
 @Getter
 @Setter
@@ -16,4 +17,6 @@ public class TaskRequestDto {
     private String description;
     @NotNull
     private Long userId;
+    @NotNull
+    private TaskStatus status;
 }
