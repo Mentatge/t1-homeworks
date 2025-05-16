@@ -52,3 +52,8 @@ notification:
 
 dbName: t1_homework_db
 
+logging:
+  aspect:
+    enabled: true
+    level: info
+
