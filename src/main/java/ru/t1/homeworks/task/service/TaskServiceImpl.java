@@ -6,16 +6,16 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import ru.t1.homeworks.aspect.annotation.LogAfterReturning;
-import ru.t1.homeworks.aspect.annotation.LogAfterThrowing;
-import ru.t1.homeworks.aspect.annotation.LogAround;
-import ru.t1.homeworks.aspect.annotation.LogBefore;
 import ru.t1.homeworks.task.dao.TaskRepository;
 import ru.t1.homeworks.task.entity.Task;
 import ru.t1.homeworks.task.entity.TaskStatus;
 import ru.t1.homeworks.task.exception.TaskNotFoundException;
 import ru.t1.homeworks.task.service.dto.TaskRequestDto;
 import ru.t1.homeworks.task.service.dto.TaskDto;
+import ru.t1.logging.aspect.annotation.LogAfterReturning;
+import ru.t1.logging.aspect.annotation.LogAfterThrowing;
+import ru.t1.logging.aspect.annotation.LogAround;
+import ru.t1.logging.aspect.annotation.LogBefore;
 
 import java.util.List;
 
